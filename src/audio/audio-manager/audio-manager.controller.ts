@@ -13,10 +13,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
-import { editFileName, audioFileFilter } from '../utils/audio-upload.utils';
+import { editFilename, filetypeFilter } from '../../utils/upload.utils';
 import { AuthGuard } from '@nestjs/passport';
 import { AudioService } from '../audio.service';
-import { GetUser } from '../utils/get-user.decorator';
+import { GetUser } from '../../utils/get-user.decorator';
 import { User } from 'src/auth/user.schema';
 import { SaveAudioDto } from '../dto/save-audio.dto';
 
@@ -32,9 +32,9 @@ export class AudioManagerController {
     FileInterceptor('audio', {
       storage: diskStorage({
         destination: './audio-tracks',
-        filename: editFileName
+        filename: editFilename
       }),
-      fileFilter: audioFileFilter
+      fileFilter: filetypeFilter(/\.(mp3|mp4|flac)$/)
     })
   )
   preload(
