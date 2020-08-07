@@ -24,6 +24,9 @@ export class User extends Document {
 
   @Prop({ default: [] })
   trackIds: string[];
+
+  @Prop({ default: ''})
+  image: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
