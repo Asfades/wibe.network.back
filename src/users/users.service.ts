@@ -13,9 +13,11 @@ export class UsersService {
     @InjectModel('User') private readonly userModel: Model<User>
   ) {}
 
-  async getProfile(username: string): Promise<boolean> {
+  async getProfile(username: string): Promise<any> {
     const found = await this.userModel.findOne({ username }).exec();
-    return !!found;
+    return {
+      avatar: found.image
+    };
   }
 
   async uploadImage(uploadAudioDto: UploadUserImageDto): Promise<void> {
