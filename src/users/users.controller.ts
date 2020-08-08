@@ -34,7 +34,7 @@ export class UsersController {
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
-        destination: './audio-tracks',
+        destination: './files/profiles/image',
         filename: editFilename
       }),
       fileFilter: filetypeFilter(/\.(jpg|jpeg|png)$/)

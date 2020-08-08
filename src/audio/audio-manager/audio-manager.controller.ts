@@ -31,7 +31,7 @@ export class AudioManagerController {
   @UseInterceptors(
     FileInterceptor('audio', {
       storage: diskStorage({
-        destination: './audio-tracks',
+        destination: './files/audio',
         filename: editFilename
       }),
       fileFilter: filetypeFilter(/\.(mp3|mp4|flac)$/)
