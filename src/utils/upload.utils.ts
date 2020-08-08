@@ -9,20 +9,45 @@ export function filetypeFilter(typeRegex) {
     }
     callback(null, true);
   }
-};
+}
 
-export function editFilename(req, file, callback) {
-  const name = file.originalname.split('.')[0];
-  const fileExtName = extname(file.originalname);
-  const randomPart = uuid();
-  const editedFilename = `${name}-${randomPart}${fileExtName}`;
-  req.on('close', removeUnuploadedFile(editedFilename));
-  callback(null, editedFilename);
-};
-
-function removeUnuploadedFile(filename) {
-  return () => {
-    console.log('request closed, ', filename);
-    fs.promises.unlink(`./audio-tracks/${filename}`);
+export function editFilename(categoryName: FileCategories) {
+  return function(req, file, callback) {
+    const fileExtName = extname(file.originalname);
+    const randomPart = uuid();
+    const editedFilename = `${categoryName}-${randomPart}${fileExtName}`;
+    req.on('close', removeUnuploadedFile(editedFilename, categoryName));
+    callback(null, editedFilename);
   }
+}
+
+function removeUnuploadedFile(filename, categoryName) {
+  return () => {
+    let filepath = getFolder(categoryName);
+    fs.promises.unlink(`${filepath}/${filename}`);
+  }
+}
+
+export enum FileCategories {
+  Avatars = 'avatars',
+  Backgrounds = 'backgrounds',
+  Audios = 'audios'
+}
+
+export function getFolder(fileCategory: FileCategories) {
+  let filepath = './files/'
+  switch (fileCategory) {
+    case FileCategories.Avatars:
+      filepath += 'profiles/avatars';
+      break;
+    case FileCategories.Backgrounds:
+      filepath += 'profiles/backgrounds';
+      break;
+    case FileCategories.Audios:
+      filepath += 'audios';
+      break;
+    default:
+      return;
+  }
+  return filepath;
 }

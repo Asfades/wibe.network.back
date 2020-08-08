@@ -9,6 +9,7 @@ import { Response } from 'express';
 
 import { AudioService } from './audio.service';
 import { GetUserAudioDto, GetUserAudioValidationPipe } from './dto/get-user-audio.dto';
+import { getFolder, FileCategories } from 'src/utils/upload.utils';
 
 @Controller('audio')
 export class AudioController {
@@ -26,7 +27,7 @@ export class AudioController {
     @Param('filename') filename: string,
     @Res() res: Response
   ) {
-    return res.sendFile(filename, { root: './audio-tracks'});
+    return res.sendFile(filename, { root: getFolder(FileCategories.Audios) });
   }
 
   @Get('user-audio')
@@ -35,13 +36,5 @@ export class AudioController {
   ) {
     return this.audioService.getUserAudio(getUserAudioDto);
   }
-
-  // @Get('files/:filename')
-  // seeUploadedFile(
-  //   @Param('filename') image: string,
-  //   @Res() res: Response
-  // ) {
-  //   return res.sendFile(image, { root: './files' });
-  // }
 
 }
