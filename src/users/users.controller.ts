@@ -37,26 +37,53 @@ export class UsersController {
     FileInterceptor('image', {
       storage: diskStorage({
         destination: getFolder(FileCategories.Avatars),
-        filename: editFilename(FileCategories.Avatars)
-      }),
-      fileFilter: filetypeFilter(/\.(jpg|jpeg|png)$/)
+        filename: editFilename(FileCategories.Avatars, '.png')
+      })
     })
   )
-  uploadProfileImage(
+  uploadAvatar(
     @GetUser() user: User,
     @UploadedFile() file
   ) {
-    return this.usersService.uploadImage({
+    return this.usersService.uploadAvatar({
       id: user.id,
       filename: file.filename
     });
   }
 
   @Get('avatars/:filename')
-  getProfileImage(
+  getAvatar(
     @Param('filename') filename: string,
     @Res() res: Response
   ) {
     return res.sendFile(filename, { root: getFolder(FileCategories.Avatars) });
+  }
+
+  @UseGuards(AuthGuard())
+  @Post(':profile/background')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: getFolder(FileCategories.Backgrounds),
+        filename: editFilename(FileCategories.Backgrounds, '.png')
+      })
+    })
+  )
+  uploadBackground(
+    @GetUser() user: User,
+    @UploadedFile() file
+  ) {
+    return this.usersService.uploadBackground({
+      id: user.id,
+      filename: file.filename
+    });
+  }
+
+  @Get('backgrounds/:filename')
+  getBackground(
+    @Param('filename') filename: string,
+    @Res() res: Response
+  ) {
+    return res.sendFile(filename, { root: getFolder(FileCategories.Backgrounds) });
   }
 }
