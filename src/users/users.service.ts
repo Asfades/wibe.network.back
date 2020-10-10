@@ -15,8 +15,12 @@ export class UsersService {
     @InjectModel('User') private readonly userModel: Model<User>
   ) {}
 
-  async getProfile(username: string): Promise<any> {
+  async getProfile(username: string): Promise<{
+    avatar: string;
+    background: string;
+  }> {
     const found = await this.userModel.findOne({ username }).exec();
+    if (!found) return null;
     return {
       avatar: found.avatar,
       background: found.background
